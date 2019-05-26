@@ -7,6 +7,7 @@
 const webpack     = require('webpack');
 const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { version } = require('./package.json');
 
 module.exports = env => {
@@ -17,6 +18,7 @@ module.exports = env => {
   const output = {
     path: resolve(process.cwd(), 'dist'),
     filename: '[name].js',
+    publicPath: ifProd ? 'https://whois.fullcrack.dev/' : 'http://localhost:9000/',
   };
 
   return {
@@ -28,6 +30,7 @@ module.exports = env => {
         extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js', '.json']
     },
     plugins: removeEmpty([
+      new CopyWebpackPlugin([{ from: './public' }]),
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: env.prod ? '"production"' : '"development"',
